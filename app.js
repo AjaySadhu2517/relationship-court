@@ -57,11 +57,11 @@ async function startRole(role){
 
 // Browser-side Excel reader using SheetJS
 async function loadRole(){
-  app.innerHTML = `<main class="screen loading"><div class="loading-card">
+  app.innerHTML=`<main class="screen loading"><div class="loading-card">
     <div class="loading-title">⚖ The Relationship Court</div><div class="loading-sub">LOADING YOUR SIDE...</div><div class="loading-line"></div>
   </div></main>`;
   
-  try {
+  try{
     const fileName = state.role === "boy" ? "Boy.xlsx" : "Girl.xlsx";
     const response = await fetch(fileName);
     if (!response.ok) throw new Error("Excel file not found");
@@ -82,7 +82,8 @@ async function loadRole(){
       if(finalVal) {
         finalMsg = finalVal;
       }
-      if(pointVal) {
+      // Only push valid questions and ignore empty/blank rows at the end of Excel
+      if(pointVal && String(pointVal).trim() !== "") {
         questions.push({
           point: pointVal,
           button1: r["Reaction Button 1"] || r.button1 || r.Button1 || "",
@@ -103,13 +104,12 @@ async function loadRole(){
       return;
     }
     renderQuestion();
-  } catch(e) {
+  }catch(e){
     console.error(e); 
     showToast("Could not load or parse the Excel data."); 
     setTimeout(showHome, 1800);
   }
 }
-
 function renderQuestion(){
   const q = state.data.questions[state.index];
   const bg = state.role === "boy" ? "Boy_Chat_BG.png" : "Girl_Chat_BG.png";
