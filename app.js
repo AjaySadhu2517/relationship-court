@@ -144,8 +144,11 @@ function chooseAnswer(which){
 
 function nextQuestion(){
   state.index++;
-  if(state.index < state.data.questions.length) renderQuestion();
-  else showFinal();
+  if(state.index < state.data.questions.length) {
+    renderQuestion();
+  } else {
+    showFinal(); // Ensure it cleanly triggers the final screen when questions are completed
+  }
 }
 
 function showFinal(){
